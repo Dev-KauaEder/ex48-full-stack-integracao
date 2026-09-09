@@ -4,15 +4,19 @@ const app = express();
 
 // CORS: aceita requisições de http://localhost:3001
 app.use(cors({ origin: 'http://localhost:3001' }));
+
 app.use(express.json());
 app.use(express.static('public'));
 
-let tarefas = [], nextId = 1;
+let tarefas = [];
+let nextId = 1;
 
-app.get('/api/tarefas',( req , res )=> {
-    res.status(200).json();
-})
+// GET /api/tarefas → 200 + array de tarefas
+app.get('/api/tarefas', (req, res) => {
+    res.status(200).json(tarefas);
+});
 
+// POST /api/tarefas → 201 + tarefa criada
 app.post('/api/tarefas', (req, res) => {
     const { titulo } = req.body;
 
@@ -21,12 +25,11 @@ app.post('/api/tarefas', (req, res) => {
         titulo: titulo
     };
 
-    tarefas.push(tarefa)
+    tarefas.push(tarefa);
 
-    res.status(201).json(tarefa)
+    res.status(201).json(tarefa);
+});
+
+app.listen(3000, () => {
+    console.log('Servidor rodando em http://localhost:3000');
 })
-// TODO:
-// GET  /api/tarefas  → 200 + array de tarefas
-// POST /api/tarefas  → 201 + tarefa criada { id, titulo }
-
-app.listen(3000, () => console.log('Servidor rodando em http://localhost:3000'));
