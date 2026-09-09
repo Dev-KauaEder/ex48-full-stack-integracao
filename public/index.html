@@ -18,7 +18,7 @@
     const lista = document.getElementById('lista')
     const eroo = document.getElementById('erro')
 
-    async function carregarTarefas() {
+    async function carregarTarefas(tarefa) {
     try {
         const resposta = await fetch(api);
 
