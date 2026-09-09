@@ -12,6 +12,65 @@
 
   <script>
     const api = 'http://localhost:3000/api/tarefas';
+    
+    const form = document.getElementById('form')
+    const titilo = document.getElementById('titulo')
+    const lista = document.getElementById('lista')
+    const eroo = document.getElementById('erro')
+
+    async function carregarTarefas() {
+    try {
+        const resposta = await fetch(api);
+
+        if (!resposta.ok) {
+            throw new Error('Erro ao buscar tarefas');
+        }
+        const tarefas = await resposta.json();
+        lista.innerHTML = '';
+
+        tarefas.forEach(tarefa => {
+            const item = document.createElement('li');
+            item.textContent = `${tarefa.id} - ${tarefa.titulo}`;
+            lista.appendChild(item);
+        });
+
+    } catch (e) {
+        erro.textContent = e.message;
+    }
+
+    form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    erro.textContent = '';
+
+    const tituloValor = titulo.value;
+
+    try {
+        const resposta = await fetch(api, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                titulo: tituloValor
+            })
+        });
+
+        if (!resposta.ok) {
+            throw new Error('Erro ao adicionar tarefa');
+        }
+        const tarefa = await resposta.json();
+        const item = document.createElement('li');
+        item.textContent = `${tarefa.id} - ${tarefa.titulo}`;
+        lista.appendChild(item);
+        titulo.value = '';
+
+    } catch (e) {
+        erro.textContent = e.message;
+    }
+});
+  }
+
     // TODO: ao carregar a página, busca as tarefas com fetch e exibe na lista
     // TODO: ao submeter o formulário, envia POST com { titulo } e atualiza a lista
     // TODO: erros de rede/API devem ser exibidos no elemento #erro
